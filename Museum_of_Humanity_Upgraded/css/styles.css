@@ -110,9 +110,10 @@ body.light {
   display:none
 }
 
+/* HERO SECTION */
 .hero {
-  min-height:730px;
-  height:min(100vh,900px);
+  min-height:100vh;
+  height:auto;
   position:relative;
   display:flex;
   align-items:center;
@@ -123,18 +124,19 @@ body.light {
 .hero-image {
   position:absolute;
   inset:0;
-  background-image:url("../assets/images/home-hero.png");
-  background-position:right center;
-  background-size:auto 100%;
+  background-position:center right;
+  background-size:cover;
   background-repeat:no-repeat;
   background-color:#100d09;
-  filter:brightness(.68)
+  filter:brightness(.65);
+  z-index: 0;
 }
 
 .hero-shade {
   position:absolute;
   inset:0;
-  background:linear-gradient(90deg,rgba(8,7,5,.94) 0%,rgba(8,7,5,.76) 38%,rgba(8,7,5,.08) 74%),linear-gradient(0deg,#100d09 0%,transparent 25%)
+  background:linear-gradient(90deg,rgba(8,7,5,.94) 0%,rgba(8,7,5,.76) 38%,rgba(8,7,5,.08) 74%),linear-gradient(0deg,#100d09 0%,transparent 25%);
+  z-index: 1;
 }
 
 .hero-content {
@@ -605,7 +607,12 @@ footer small {
   position:relative;
   border-radius:8px;
   overflow:hidden;
-  cursor:pointer
+  cursor:pointer;
+  border:none;
+  padding:0;
+  background:transparent;
+  display:block;
+  width:100%
 }
 
 .video-thumb img {
@@ -775,6 +782,22 @@ footer small {
 .menu-toggle {
   display:none
 }
+
+/* Smooth Room Transitions */
+.room-content-transition {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.room-content-transition.fade-out {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.room-content-transition.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @media(max-width:1100px) {
   .rooms-grid {
     grid-template-columns:repeat(3,1fr)
@@ -834,14 +857,18 @@ footer small {
   }
 
   .hero {
-    min-height:750px;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
     height:auto;
     padding:115px 7vw 70px;
-    align-items:flex-start
+    align-items:flex-start;
+    overflow:hidden
   }
 
   .hero-image {
-    background-position:58% center
+    background-size:cover;
+    background-position:center;
   }
 
   .hero-shade {
@@ -867,11 +894,8 @@ footer small {
     margin:40px 0 0;
     max-width:100%;
     padding:12px 18px;
-    align-self:flex-end
-  }
-
-  .hero {
-    display:block
+    align-self:flex-end;
+    background:rgba(12,10,7,.85)
   }
 
   .hero-content {
@@ -1018,50 +1042,27 @@ footer small {
   background:#000;
   object-fit:contain
 }
-/* Hero image framing fix: preserve the full sculpture on desktop;
- mobile may crop gently for readability. */
-@media(min-width:761px) {
-  .hero-image {
-    background-size:auto 100%;
-    background-position:right center;
-    background-repeat:no-repeat
-  }
 
-}
-@media(max-width:760px) {
-  .hero-image {
-    background-size:cover;
-    background-position:58% center
-  }
-
-}
-/* Room 2: video choices and quotation layout */
 .room-quote-line  {
    margin: 8px 0;
-  
 }
 .room-quote-line:first-child  {
    margin-top: 0;
-  
 }
 .room-quote-line:last-child  {
    margin-bottom: 0;
-  
 }
 .video-section  {
    margin: 28px 0;
-  
 }
 .video-section-title  {
    margin: 5px 0 16px;
-   font: 28px "Cormorant Garamond", serif;
-  
+  font: 28px "Cormorant Garamond", serif;
 }
 .video-choices  {
    display: grid;
    grid-template-columns: repeat(2, minmax(0, 1fr));
    gap: 18px;
-  
 }
 .video-choice  {
    display: block;
@@ -1074,207 +1075,27 @@ footer small {
    border: 1px solid #705329;
    border-radius: 9px;
    cursor: pointer;
-  
-}
-.video-choice-thumb  {
-   position: relative;
-   display: block;
-   aspect-ratio: 16 / 9;
-   overflow: hidden;
-   background: #080706;
-  
-}
-.video-choice-thumb img  {
-   display: block;
-   width: 100%;
-   height: 100%;
-   object-fit: cover;
-   transition: transform .35s;
-  
 }
 .video-choice:hover .video-choice-thumb img  {
    transform: scale(1.04);
-  
 }
 .video-choice-title, .video-choice-link  {
    display: block;
    padding: 0 15px;
-  
 }
 .video-choice-title  {
    margin-top: 12px;
    font: 22px "Cormorant Garamond", serif;
-  
 }
 .video-choice-link  {
    margin-top: 4px;
    color: #d8ad66;
    font-size: 10px;
    letter-spacing: .12em;
-  
 }
-/* Responsive hero image: keep the complete source image visible. */
-.hero  {
-   min-height: 760px;
-   height: auto;
-   min-height: min(900px, 100svh);
-  
-}
-.hero-image  {
-   background-size: contain;
-   background-position: right center;
-   background-repeat: no-repeat;
-  
-}
-.hero-content  {
-   width: min(100%, 680px);
-  
-}
-@media (max-width: 900px)  {
-  
-    .hero  {
-     min-height: 760px;
-     padding: 130px 6vw 70px;
-    
-  }
-  
-    .hero-image  {
-     background-size: auto 82%;
-     background-position: right bottom;
-    
-  }
-  
-    .hero-shade  {
-     background: linear-gradient(90deg, rgba(8,7,5,.96) 0%, rgba(8,7,5,.82) 52%, rgba(8,7,5,.25) 100%), linear-gradient(0deg, #100d09 0%, transparent 35%);
-    
-  }
-  
-    .hero-quote  {
-     right: 5vw;
-     bottom: 8%;
-     max-width: 260px;
-    
-  }
-
-}
-@media (max-width: 600px)  {
-  
-    .hero  {
-     min-height: 900px;
-     min-height: 100svh;
-     align-items: flex-start;
-     padding: 118px 22px 45px;
-    
-  }
-  
-    .hero-image  {
-     background-size: auto 48%;
-     background-position: center bottom 8%;
-     opacity: .85;
-    
-  }
-  
-    .hero-shade  {
-     background: linear-gradient(180deg, rgba(8,7,5,.98) 0%, rgba(8,7,5,.88) 47%, rgba(8,7,5,.35) 100%), linear-gradient(0deg, #100d09 0%, transparent 55%);
-    
-  }
-  
-    .hero h1  {
-     font-size: clamp(55px, 15vw, 82px);
-     line-height: .86;
-    
-  }
-  
-    .hero-sub  {
-     font-size: 23px;
-    
-  }
-  
-    .hero-copy  {
-     max-width: 100%;
-     font-size: 13px;
-    
-  }
-  
-    .hero-quote  {
-     display: none;
-    
-  }
-  
-    .group-credit  {
-     margin-top: 22px;
-    
-  }
-  
-    .video-choices  {
-     grid-template-columns: 1fr;
-    
-  }
-  
-    .room-body  {
-     padding: 24px 18px 30px;
-    
-  }
-
-}
-
-/* Final mobile hero framing: show the complete hero artwork without cropping. */
-@media (max-width: 600px) {
-  .hero {
-    min-height: 0;
-    height: auto;
-    padding: 112px 22px 0;
-    display: block;
-    overflow: hidden;
-  }
-  .hero-content {
-    position: relative;
-    z-index: 3;
-    width: 100%;
-    max-width: none;
-    padding-bottom: 0;
-  }
-  .hero-image {
-    background-size: 100% auto;
-    background-position: center bottom;
-    background-repeat: no-repeat;
-    opacity: .82;
-  }
-  .hero-shade {
-    background:
-      linear-gradient(180deg, rgba(8,7,5,.98) 0%, rgba(8,7,5,.94) 52%, rgba(8,7,5,.42) 100%),
-      linear-gradient(0deg, #100d09 0%, transparent 58%);
-  }
-  .hero-quote {
-    display: none;
-  }
-  .group-credit {
-    margin-top: 22px;
-    margin-bottom: 0;
-  }
-  .scroll-note {
-    margin-top: 24px;
-  }
-  .hero::after {
-    content: "";
-    display: block;
-    height: 66vw;
-    min-height: 190px;
-    max-height: 270px;
-  }
-  .video-feature {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .video-info {
-    min-width: 0;
-  }
-}
-
 
 /* ==========================================================
    RESPONSIVE + ACCESSIBLE THEME REFINEMENT
-   Added as a final override layer; original exhibit styling
-   and content remain intact.
    ========================================================== */
 
 :root {
@@ -1294,34 +1115,11 @@ button:focus-visible, a:focus-visible, textarea:focus-visible {
   outline-offset: 3px;
 }
 
-/* Desktop/tablet hero: image fills the available visual area cleanly. */
-.hero {
-  min-height: clamp(680px, 100svh, 980px);
-  height: auto;
-  isolation: isolate;
-}
-.hero-image {
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
-.hero-shade {
-  background:
-    linear-gradient(90deg, rgba(8,7,5,.94) 0%, rgba(8,7,5,.78) 39%, rgba(8,7,5,.18) 78%, rgba(8,7,5,.08) 100%),
-    linear-gradient(0deg, #100d09 0%, transparent 34%);
-}
-.hero-content { max-width: min(660px, 58vw); }
-.hero-quote {
-  max-width: min(340px, 28vw);
-  color: #fffaf1;
-}
-.hero-quote p { color: #fffaf1; }
-.hero-quote small { color: #f0dfc2; }
 .brand { white-space: nowrap; }
 .topbar { gap: 18px; }
 .nav { align-items: center; }
 
-/* Light theme: warm paper surfaces with consistently dark readable text. */
+/* Light theme Fixes */
 body.light {
   color-scheme: light;
   background: #f4eee4;
@@ -1333,6 +1131,7 @@ body.light {
   box-shadow: 0 4px 22px rgba(48, 35, 18, .07);
 }
 .light .brand { color: #75501e; }
+.light .brand b { color: #241d15; } 
 .light .brand-mark { color: #9b6b28; }
 .light .nav a { color: #30271d; }
 .light .nav a.active,
@@ -1342,28 +1141,22 @@ body.light {
   color: #80571f;
   border-color: #a87934;
 }
-.light .hero-shade {
-  background:
-    linear-gradient(90deg, rgba(15,12,8,.88) 0%, rgba(15,12,8,.68) 43%, rgba(15,12,8,.12) 100%),
-    linear-gradient(0deg, rgba(15,12,8,.88) 0%, transparent 38%);
+
+/* Ensure hero text is ALWAYS white for contrast */
+.hero h1,
+.hero-sub,
+.hero-copy,
+.hero-quote,
+.hero-quote p,
+.hero-quote small,
+.hero h1 span {
+  color: #fffaf1 !important;
 }
-.light .hero h1,
-.light .hero-sub,
-.light .hero-copy,
-.light .hero-quote,
-.light .hero-quote p,
-.light .hero-quote small {
-  color: #fffaf1;
-}
-.light .hero h1 span { color: #f0c77f; }
-.light .hero .eyebrow,
-.light .scroll-note { color: #f1c879; }
-.light .group-credit {
-  background: rgba(14, 11, 7, .72);
-  border-left-color: #d6a24f;
-}
-.light .group-credit p { color: #fff4df; }
-.light .group-credit span { color: #f0c77f; }
+.hero h1 span { color: #f0c77f !important; }
+.hero .eyebrow,
+.scroll-note { color: #f1c879 !important; }
+.group-credit span { color: #f0c77f !important; }
+.group-credit p { color: #fff4df !important; }
 
 .light .rooms-section {
   background: linear-gradient(180deg, #f0e8dc, #e8dece);
@@ -1406,7 +1199,7 @@ body.light {
 }
 .light footer p { color: #75501e; }
 
-/* Light-mode modal surfaces and form fields. */
+/* Light-mode modal surfaces */
 .light .modal-panel,
 .light .journal-box {
   background: #f5efe5;
@@ -1442,7 +1235,6 @@ body.light {
 }
 .light .video-box p { color: #f5efe5; }
 
-/* Mobile navigation and hero composition. */
 @media (max-width: 760px) {
   .topbar {
     height: 66px;
@@ -1469,26 +1261,21 @@ body.light {
     border-bottom-color: #c9b99f;
   }
   .light .nav a { color: #30271d; }
+  
   .hero {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    min-height: 0;
-    height: auto;
+    min-height: 100dvh;
     padding: 104px 20px 34px;
     overflow: hidden;
   }
+  
   .hero-image {
-    background-size: 100% auto;
-    background-position: center bottom;
-    background-repeat: no-repeat;
-    opacity: .92;
+    background-size: cover;
+    background-position: center;
   }
-  .hero-shade {
-    background:
-      linear-gradient(180deg, rgba(8,7,5,.97) 0%, rgba(8,7,5,.88) 45%, rgba(8,7,5,.30) 100%),
-      linear-gradient(0deg, #100d09 0%, transparent 58%);
-  }
+
   .light .hero-shade {
     background:
       linear-gradient(180deg, rgba(15,12,8,.90) 0%, rgba(15,12,8,.78) 48%, rgba(15,12,8,.30) 100%),
@@ -1531,13 +1318,6 @@ body.light {
     color: #fffaf1;
   }
   .hero-quote small { color: #f0dfc2; }
-  .hero::after {
-    content: "";
-    display: block;
-    width: 100%;
-    height: clamp(190px, 66vw, 280px);
-    flex: 0 0 auto;
-  }
   .rooms-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .room-card { min-height: 300px; }
   .exhibit-grid { grid-template-columns: 1fr; }
@@ -1554,10 +1334,4 @@ body.light {
   .room-body { padding: 20px 15px 26px; }
   .room-hero { min-height: 250px; height: auto; padding: 22px 18px; }
   .journal-box { padding: 24px 18px; }
-}
-
-/* Larger screens retain a balanced image/text split. */
-@media (min-width: 761px) {
-  .hero { padding-top: 130px; padding-bottom: 90px; }
-  .hero-quote { bottom: 11%; }
 }
