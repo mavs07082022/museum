@@ -156,6 +156,27 @@ function progress(){
   document.getElementById("progressText").textContent=`${visited.length} / 5`;
   document.getElementById("progressBar").style.width=`${visited.length*20}%`;
 }
+
+function buildRoomHTML(r) {
+  const exhibits=r.exhibits.map(e=>`<article class="exhibit"><img src="${e[2]}" alt="${e[0]}" loading="lazy"><div><h3>${e[0]}</h3><p>${e[1]}</p></div></article>`).join("");
+  const videoId=r.videoId;
+  const thumb=videoId?`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`:r.card;
+  
+  return `<div class="room-hero" style="background-image:url('${r.image}')"><div class="room-hero-content"><span class="eyebrow">ROOM 0${r.id} • VIRTUAL EXHIBIT</span><h2>${r.title}</h2><p>${r.subtitle}</p></div></div>
+  <div class="room-body">
+    <p class="room-intro">${r.desc}</p>
+    <div class="exhibit-grid">${exhibits}</div>
+    <blockquote class="room-quote">${r.quotes?r.quotes.map(q=>`<p class="room-quote-line">“${q}”</p>`).join(""):r.quote}</blockquote>
+    ${r.videoLinks?"":`<div class="video-feature"><div class="video-thumb" onclick="playRoomVideo(${r.id})"><img src="${thumb}" alt="Video thumbnail" onerror="this.src='${r.card}'"><div class="play-button">▶</div></div><div class="video-info"><span class="eyebrow">WATCH & LEARN</span><h3>${r.videoTitle}</h3><p>Video will play within this website when a YouTube video ID is configured. Use the video search link to select a class-appropriate clip.</p><a class="text-link" href="${r.videoSearch}" target="_blank" rel="noopener">FIND A VIDEO ON YOUTUBE ↗</a></div></div>`}
+    ${r.videoLinks?`<div class="video-section"><span class="eyebrow">WATCH & LEARN</span><h3 class="video-section-title">Room 2 Video — Freedom and Responsibility</h3><div class="video-feature"><button class="video-thumb video-choice" type="button" onclick="playRoomVideo(${r.id},0)" aria-label="Play Room 2 video"><img src="https://img.youtube.com/vi/${r.videoLinks[0].id}/hqdefault.jpg" alt="Freedom and Responsibility video thumbnail"><span class="play-button">▶</span></button><div class="video-info"><h3>${r.videoLinks[0].title}</h3><p>Watch this video to explore how freedom gives us the power to make choices and why every choice comes with responsibility. Think about how your decisions affect you and the people around you.</p><span class="video-choice-link">SELECT PLAY TO WATCH INSIDE THE WEBSITE</span></div></div></div>`:""}
+    <div class="reflection-card"><span class="eyebrow">INTERACTIVE REFLECTION</span><h3>${r.activity}</h3><p>${r.reflection}</p><textarea id="roomReflection" placeholder="Your response..."></textarea><button class="gold-button" onclick="saveRoomReflection(${r.id})">SAVE ROOM REFLECTION</button><span class="saved-note" id="roomSaved"></span></div>
+    <div class="room-actions">
+      <button class="enter-room" onclick="closeRoom()">← BACK TO EXHIBITION</button>
+      ${r.id<5?`<button class="gold-button" onclick="nextRoom(${r.id+1})">NEXT ROOM →</button>`:`<button class="gold-button" onclick="closeRoom(); openJournal()">FINISH & REFLECT →</button>`}
+    </div>
+  </div>`;
+}
+
 function openRoom(id){
   const r=rooms.find(x=>x.id===id);
   if(!visited.includes(id)){
@@ -163,18 +184,45 @@ function openRoom(id){
     localStorage.setItem("mohVisited",JSON.stringify(visited));
     progress();
   }
-  const exhibits=r.exhibits.map(e=>`<article class="exhibit"><img src="${e[2]}" alt="${e[0]}" loading="lazy"><div><h3>${e[0]}</h3><p>${e[1]}</p></div></article>`).join("");
-  const videoId=r.videoId;
-  const thumb=videoId?`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`:r.card;
-  document.getElementById("roomContent").innerHTML=`<div class="room-hero" style="background-image:url('${r.image}')"><div class="room-hero-content"><span class="eyebrow">ROOM 0${r.id} • VIRTUAL EXHIBIT</span><h2>${r.title}</h2><p>${r.subtitle}</p></div></div><div class="room-body"><p class="room-intro">${r.desc}</p><div class="exhibit-grid">${exhibits}</div><blockquote class="room-quote">${r.quotes?r.quotes.map(q=>`<p class="room-quote-line">“${
-    q
-}”</p>`).join(""):r.quote}</blockquote>${r.videoLinks?"":`<div class="video-feature"><div class="video-thumb" onclick="playRoomVideo(${r.id})"><img src="${thumb}" alt="Video thumbnail" onerror="this.src='${r.card}'"><div class="play-button">▶</div></div><div class="video-info"><span class="eyebrow">WATCH & LEARN</span><h3>${r.videoTitle}</h3><p>Video will play within this website when a YouTube video ID is configured. Use the video search link to select a class-appropriate clip.</p><a class="text-link" href="${r.videoSearch}" target="_blank" rel="noopener">FIND A VIDEO ON YOUTUBE ↗</a></div></div>`}${r.videoLinks?`<div class="video-section"><span class="eyebrow">WATCH & LEARN</span><h3 class="video-section-title">Room 2 Video — Freedom and Responsibility</h3><div class="video-feature"><button class="video-thumb video-choice" type="button" onclick="playRoomVideo(${r.id},0)" aria-label="Play Room 2 video"><img src="https://img.youtube.com/vi/${r.videoLinks[0].id}/hqdefault.jpg" alt="Freedom and Responsibility video thumbnail"><span class="play-button">▶</span></button><div class="video-info"><h3>${r.videoLinks[0].title}</h3><p>Watch this video to explore how freedom gives us the power to make choices and why every choice comes with responsibility. Think about how your decisions affect you and the people around you.</p><span class="video-choice-link">SELECT PLAY TO WATCH INSIDE THE WEBSITE</span></div></div></div>`:""}<div class="reflection-card"><span class="eyebrow">INTERACTIVE REFLECTION</span><h3>${r.activity}</h3><p>${r.reflection}</p><textarea id="roomReflection" placeholder="Your response..."></textarea><button class="gold-button" onclick="saveRoomReflection(${r.id})">SAVE ROOM REFLECTION</button><span class="saved-note" id="roomSaved"></span></div><div class="room-actions"><button class="enter-room" onclick="closeRoom()">← BACK TO EXHIBITION</button>${r.id<5?`<button class="gold-button" onclick="openRoom(${r.id+1})">NEXT ROOM →</button>`:`<button class="gold-button" onclick="openJournal()">FINISH & REFLECT →</button>`}</div></div>`;
+  
+  const contentDiv = document.getElementById("roomContent");
+  contentDiv.innerHTML = buildRoomHTML(r);
+  
   document.getElementById("roomModal").classList.add("open");
   document.getElementById("roomModal").setAttribute("aria-hidden","false");
   document.body.style.overflow="hidden";
+  
   const saved=JSON.parse(localStorage.getItem("mohRoomReflections")||"{}");
-  if(saved[id])document.getElementById("roomReflection").value=saved[id];
+  const textarea = document.getElementById("roomReflection");
+  if(saved[id] && textarea) textarea.value=saved[id];
+  
+  // Reset scroll position to top
+  document.querySelector(".modal-panel").scrollTop = 0;
 }
+
+// Smooth Next Room transition
+function nextRoom(id) {
+  const contentDiv = document.getElementById("roomContent");
+  
+  // 1. Start fade out
+  contentDiv.classList.add("fade-out");
+  
+  // 2. Wait for CSS transition to finish (300ms), then load next room
+  setTimeout(() => {
+    contentDiv.classList.remove("fade-out");
+    
+    openRoom(id); // Builds HTML and sets scroll to top
+    
+    // 3. Start fade in
+    contentDiv.classList.add("fade-in");
+    
+    // 4. Clean up fade-in class after it finishes
+    setTimeout(() => {
+      contentDiv.classList.remove("fade-in");
+    }, 400);
+  }, 300);
+}
+
 function closeRoom(){
   document.getElementById("roomModal").classList.remove("open");
   document.getElementById("roomModal").setAttribute("aria-hidden","true");
@@ -215,9 +263,11 @@ function openJournal(){
 function closeJournal(){
   document.getElementById("journalModal").classList.remove("open");
 }
+
 renderCards();
 renderSources();
 progress();
+
 document.querySelector(".modal-close").addEventListener("click",closeRoom);
 document.querySelector(".modal-backdrop").addEventListener("click",closeRoom);
 document.querySelector(".video-close").addEventListener("click",closeVideo);
@@ -226,8 +276,10 @@ document.querySelector(".journal-close").addEventListener("click",closeJournal);
 document.querySelector(".journal-backdrop").addEventListener("click",closeJournal);
 document.getElementById("openJournal").addEventListener("click",openJournal);
 document.getElementById("saveJournal").addEventListener("click",()=>{
-  localStorage.setItem("mohFinalReflection",document.getElementById("journalInput").value);document.getElementById("savedNote").textContent="Reflection saved on this device ✓";
+  localStorage.setItem("mohFinalReflection",document.getElementById("journalInput").value);
+  document.getElementById("savedNote").textContent="Reflection saved on this device ✓";
 });
+
 const themeToggle=document.getElementById("themeToggle");
 const savedTheme=localStorage.getItem("mohTheme");
 if(savedTheme==="light") document.body.classList.add("light");
@@ -256,6 +308,7 @@ document.querySelectorAll(".nav a").forEach(a=>a.addEventListener("click",()=>{
 }));
 
 window.openRoom=openRoom;
+window.nextRoom=nextRoom;
 window.closeRoom=closeRoom;
 window.playRoomVideo=playRoomVideo;
 window.openJournal=openJournal;
