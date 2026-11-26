@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#100d09">
-  <meta name="description" content="Museum of Humanity — an immersive journey through five dimensions of the human experience.">
   <title>Museum of Humanity | Virtual Exhibition</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +11,7 @@
 </head>
 <body>
   <div class="grain"></div>
+  
   <header class="topbar">
     <a class="brand" href="#home"><span class="brand-mark">▥</span><span>MUSEUM OF<br><b>HUMANITY</b></span></a>
     <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">☰</button>
@@ -23,12 +22,11 @@
       <a href="#reflection">Visitor Reflection</a>
       <a href="#sources">Sources</a>
     </nav>
-    <button id="themeToggle" class="theme-toggle" type="button" title="Switch to light mode" aria-label="Switch to light mode" aria-pressed="false">☼</button>
+    <button id="themeToggle" class="theme-toggle" type="button" title="Switch to light mode" aria-label="Switch to light mode">☼</button>
   </header>
 
   <main>
     <section id="home" class="hero">
-      <!-- Uses your local image file. Ensure the path matches exactly where you saved it. -->
       <div class="hero-image" style="background-image: url('assets/images/home-hero.png');"></div>
       <div class="hero-shade"></div>
       <div class="hero-content">
@@ -62,15 +60,101 @@
 
   <footer><a class="brand footer-brand" href="#home"><span class="brand-mark">▥</span><span>MUSEUM OF<br><b>HUMANITY</b></span></a><p>Explore. Reflect. Understand.</p><small>Virtual exhibition • Performance Task</small></footer>
 
+  <!-- 2D Room Modal -->
   <div class="room-modal" id="roomModal" aria-hidden="true">
-    <div class="modal-backdrop"></div>
+    <div class="modal-backdrop" onclick="closeRoom()"></div>
     <article class="modal-panel">
-      <button class="modal-close" aria-label="Close">×</button>
+      <button class="modal-close" onclick="closeRoom()" aria-label="Close">×</button>
       <div id="roomContent" class="room-content-transition"></div>
     </article>
   </div>
-  <div class="video-modal" id="videoModal" aria-hidden="true"><div class="video-backdrop"></div><div class="video-box"><button class="video-close" aria-label="Close video">×</button><div class="video-frame" id="videoFrame"></div><p id="videoCaption"></p></div></div>
-  <div class="journal-modal" id="journalModal" aria-hidden="true"><div class="journal-backdrop"></div><div class="journal-box"><button class="journal-close">×</button><span class="eyebrow">VISITOR JOURNAL</span><h2>Your reflection</h2><p>What did this journey teach you about being human?</p><textarea id="journalInput" placeholder="Write your thoughts here..."></textarea><button id="saveJournal" class="gold-button">SAVE REFLECTION</button><p class="saved-note" id="savedNote"></p></div></div>
+
+  <!-- 3D Room Modal -->
+  <div class="virtual-room-modal" id="virtualRoomModal" aria-hidden="true">
+    <div class="v-modal-backdrop"></div>
+    <div class="v-modal-content">
+      
+      <!-- Cinematic Transition Overlay -->
+      <div class="v-transition-overlay" id="vTransition"></div>
+
+      <div class="v-ui-overlay">
+        <div class="v-ui-top">
+          <div class="v-instructions">Explore the room to find interactive exhibits</div>
+          <button class="v-modal-close" onclick="closeVirtualRoom()" aria-label="Close 3D Room">×</button>
+        </div>
+        
+        <!-- The Legend / Instruction Panel -->
+        <div class="v-legend">
+          <h4>CONTROLS</h4>
+          <div class="v-legend-row"><span>W A S D</span> Walk around</div>
+          <div class="v-legend-row"><span>MOUSE</span> Look around</div>
+          <div class="v-legend-row"><span>CLICK</span> Interact with <div class="red-dot"></div></div>
+        </div>
+
+        <div class="v-crosshair" id="vCrosshair"></div>
+      </div>
+      <div id="v-canvas-container"></div>
+    </div>
+  </div>
+
+  <!-- Art Focus Modal -->
+  <div class="art-focus" id="artFocus" aria-hidden="true">
+    <div class="art-focus-backdrop" onclick="closeArtFocus()"></div>
+    <div class="art-focus-stage">
+      <div class="art-focus-image-wrap">
+        <img id="artFocusImage" src="" alt="">
+      </div>
+      <aside class="art-focus-info">
+        <button class="art-focus-close" onclick="closeArtFocus()" aria-label="Close artwork">×</button>
+        <span class="eyebrow" id="artFocusEyebrow">EXHIBIT</span>
+        <h2 id="artFocusTitle"></h2>
+        <p id="artFocusDesc"></p>
+        <button class="gold-button art-focus-back" onclick="closeArtFocus()">← BACK TO ROOM</button>
+        <!-- Added Auto-Resume instruction -->
+        <p class="art-focus-hint">Click the X or "Back to Room" to return. The virtual museum will automatically resume.</p>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Video Modal -->
+  <div class="video-modal" id="videoModal" aria-hidden="true">
+    <div class="video-backdrop" onclick="closeVideo()"></div>
+    <div class="video-box">
+      <button class="video-close" onclick="closeVideo()" aria-label="Close video">×</button>
+      <div class="video-frame" id="videoFrame"></div>
+      <p id="videoCaption"></p>
+    </div>
+  </div>
+
+  <!-- Journal Modal -->
+  <div class="journal-modal" id="journalModal" aria-hidden="true">
+    <div class="journal-backdrop" onclick="closeJournal()"></div>
+    <div class="journal-box">
+      <button class="journal-close" onclick="closeJournal()">×</button>
+      <span class="eyebrow">VISITOR JOURNAL</span>
+      <h2>Your reflection</h2>
+      <p>What did this journey teach you about being human?</p>
+      <textarea id="journalInput" placeholder="Write your thoughts here..."></textarea>
+      <button id="saveJournal" class="gold-button">SAVE REFLECTION</button>
+      <p class="saved-note" id="savedNote"></p>
+    </div>
+  </div>
+
+  <!-- Next Room Modal -->
+  <div class="next-room-modal" id="nextRoomModal" aria-hidden="true">
+    <div class="modal-backdrop" onclick="closeNextRoomModal()"></div>
+    <div class="next-room-box">
+      <button class="journal-close" onclick="closeNextRoomModal()">×</button>
+      <span class="eyebrow">PROCEED TO</span>
+      <h2 id="nextRoomTitle">Room 2</h2>
+      <p id="nextRoomDesc">Description</p>
+      <button class="gold-button" onclick="goToNextRoom()" style="margin-top: 20px; width: 100%;">GO TO NEXT ROOM →</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/data.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/three-scene.js"></script>
 </body>
 </html>
